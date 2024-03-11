@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id Int @id @default(autoincrement())
+  name String
+  address String
+  location Location[]
+  menucategory Menucategory[]
+  user User[]
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Location {
+  id Int @id @default(autoincrement())
+  name String
+  address String
+  company Company @relation(fields: [companyId], references: [id])
+  companyId Int
+  table Table []
+  disableLocationMenucategory DisableLocationMenuCategory[]
+  disableLocationmenu DisableLocationMenu[]
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Menucategory {
+  id Int @id @default(autoincrement())
+  name String
+  company Company @relation(fields: [companyId], references: [id])
+  companyId Int
+  menuCategoryMenu MenuCategoryMenu[]
+  disableLocationMenuCategory DisableLocationMenuCategory[]
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model DisableLocationMenuCategory {
+  id Int @id @default(autoincrement())
+  location Location @relation(fields: [locationId], references: [id])
+  locationId Int
+  menuCategory Menucategory @relation(fields: [menuCategoryId], references: [id])
+  menuCategoryId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Menu {
+  id Int @id @default(autoincrement())
+  name String
+  price Int
+  description String?
+  assetUrl String?
+  menuCategoryMenu MenuCategoryMenu[]
+  disableLocationMenu DisableLocationMenu []
+  menuAddonCategory MenuAddonCategory[]
+  orderLine OrderLine []
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model DisableLocationMenu {
+  id Int @id @default(autoincrement())
+  menu Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+  location Location @relation(fields: [locationId],references: [id])
+  locationId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MenuCategoryMenu {
+  id Int @id @default(autoincrement())
+  menuCategory Menucategory @relation(fields: [menuCategoryId], references: [id])
+  menuCategoryId Int
+  menu Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AddonCategory {
+  id Int @id @default(autoincrement())
+  name String
+  isRequired Boolean @default(true)
+  menuAddonCategory MenuAddonCategory[]
+  addon Addon[] 
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model MenuAddonCategory {
+  id Int @id @default(autoincrement())
+  menu Menu @relation(fields: [menuId],references: [id])
+  menuId Int
+  addonCategory AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  addonCategoryId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Addon {
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  addonCateogry AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  addonCategoryId Int
+  orderLine OrderLine[]
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  totalPrice Int
+  status OrderStatus
+  orderLine OrderLine[]
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderLine {
+  id Int @id @default(autoincrement())
+  menu Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+  quantity Int
+  addon Addon @relation(fields: [addonId], references: [id])
+  addonId Int
+  orderSeq String
+  order Order @relation(fields: [orderId], references: [id])
+  orderId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Table {
+  id Int @id @default(autoincrement())
+  name String
+  location Location @relation(fields: [locationId], references: [id])
+  locationId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  company Company @relation(fields: [companyId],references: [id])
+  companyId Int
+  isArchived Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  ORDERED
+  OUTFORDELIVERY
+  CANCELORDER
+}
+
