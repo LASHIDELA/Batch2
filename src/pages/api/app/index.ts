@@ -115,7 +115,7 @@ const app = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     const menuIds = menuCategoryMenu.map((item) => item.menuId);
     const menus = await prisma.menu.findMany({
-      where: { id: { in: menuIds } },
+      where: { id: { in: menuIds }, isArchived: false },
     });
     const menuAddonCategory = await prisma.menuAddonCategory.findMany({
       where: { menuId: { in: menuIds } },
@@ -129,16 +129,15 @@ const app = async (req: NextApiRequest, res: NextApiResponse) => {
     const addons = await prisma.addon.findMany({
       where: { addonCategoryId: { in: addonCategoryIds } },
     });
-    return res
-      .status(200)
-      .json({
-        locations,
-        tables,
-        menuCategories,
-        menus,
-        addonCategories,
-        addons,
-      });
+    return res.status(200).json({
+      locations,
+      tables,
+      menuCategories,
+      menus,
+      addonCategories,
+      addons,
+      menuCategoryMenu,
+    });
   }
 };
 export default app;

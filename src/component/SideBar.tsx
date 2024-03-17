@@ -16,12 +16,12 @@ const SideBar = () => {
       sx={{
         bgcolor: "secondary.main",
         width: 250,
-        height: "91.8vh",
+        height: "100vh",
         borderTopRightRadius: 20,
       }}
     >
       {sideBarApp.slice(0, 7).map((item) => (
-        <Link href={item.href} style={{ textDecoration: "none" }}>
+        <Link key={item.id} href={item.href} style={{ textDecoration: "none" }}>
           <ListItemButton>
             <ListItemIcon sx={{ color: "white" }}>{item.icon}</ListItemIcon>
             <ListItemText sx={{ color: "white" }} primary={item.title} />
@@ -30,7 +30,7 @@ const SideBar = () => {
       ))}
       <Divider />
       {sideBarApp.slice(-1).map((item) => (
-        <Link href={item.href} style={{ textDecoration: "none" }}>
+        <Link key={item.id} href={item.href} style={{ textDecoration: "none" }}>
           <ListItemButton>
             <ListItemIcon sx={{ color: "white" }}>{item.icon}</ListItemIcon>
             <ListItemText sx={{ color: "white" }} primary={item.title} />

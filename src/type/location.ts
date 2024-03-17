@@ -13,3 +13,7 @@ export interface GetLocationOption extends BaseOption {
   name: string;
   companyId: number;
 }
+export interface PayloadOption extends BaseOption {
+  name: string;
+  address: string;
+}

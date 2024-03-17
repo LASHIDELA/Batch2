@@ -1,53 +1,31 @@
+import LocationCardItem from "@/component/CardItem/ItemCard";
 import LocationDialog from "@/component/dialog/LocationDialog";
 import { useAppSelector } from "@/store/hooks";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const Location = () => {
-  const [open, setOpen] = useState<boolean>(false);
   const locations = useAppSelector((store) => store.location.items);
-  let location;
-  const handleChange = (evt: SelectChangeEvent<any>) => {
-    localStorage.setItem("LocationId", String(evt.target.value));
-  };
+  const title = locations.map((item) => item.name);
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <Box sx={{ width: "100%" }}>
-      <LocationDialog open={open} setOpen={setOpen} />
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2, mr: 2 }}>
+        <Button variant="contained" onClick={() => setOpen(true)}>
+          Create
+        </Button>
+        <LocationDialog open={open} setOpen={setOpen} />
+      </Box>
       <Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            sx={{ mt: 2, mr: 2 }}
-            variant="contained"
-            onClick={() => setOpen(true)}
-          >
-            Create
-          </Button>
-        </Box>
-        <Box width={250}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Location</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={location}
-              label="Locaitons"
-              onChange={handleChange}
-            >
-              {locations.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+        <Box sx={{ display: "flex", textDecoration: "wrap" }}>
+          {locations.map((item) => (
+            <LocationCardItem
+              key={item.id}
+              icon={<LocationOnIcon />}
+              title={item.name}
+            />
+          ))}
         </Box>
       </Box>
     </Box>
