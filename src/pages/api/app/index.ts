@@ -8,6 +8,7 @@ import { authOptions } from "../auth/[...nextauth]";
 const app = async (req: NextApiRequest, res: NextApiResponse) => {
   const { tableId } = req.query;
   const isOrder = tableId;
+
   if (isOrder) {
     const tableDatas = await prisma.table.findFirst({
       where: { id: Number(tableId) },
@@ -91,7 +92,7 @@ const app = async (req: NextApiRequest, res: NextApiResponse) => {
     const name = user?.name as string;
     const email = user?.email as string;
     const db = await prisma.user.findUnique({ where: { email } });
-
+    console.log(db);
     if (!db) {
       const newCompanyName = "Default Company";
       const newCompanyStreet = "Default Street";
