@@ -5,7 +5,7 @@ import { getTotalPrice } from "@/utils/general";
 import { OrderStatus } from "@prisma/client";
 import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
-const ActiveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
+const activeOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
   if (method === "GET") {
     const orderSeq = String(req.query.orderSeq);
@@ -81,4 +81,4 @@ const ActiveOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default ActiveOrder;
+export default activeOrder;

@@ -52,9 +52,7 @@ const Hero = () => {
                 Order App
               </Button>
             </Link>
-            <Box
-              onClick={() => router.push({ pathname: `/backoffice/orders` })}
-            >
+            <Box onClick={() => router.push({ pathname: `/backoffice` })}>
               <Button
                 variant="contained"
                 sx={{

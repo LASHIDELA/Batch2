@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
-const app = async (req: NextApiRequest, res: NextApiResponse) => {
+const table = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session) return res.status(404).send("Unauthorized");
   const method = req.method;
@@ -54,4 +54,4 @@ const app = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   res.status(400).send("Invalid Method");
 };
-export default app;
+export default table;
