@@ -1,9 +1,13 @@
+import ItemCard from "@/component/CardItem/ItemCard";
 import AddonDialog from "@/component/dialog/AddonDialog";
-import { Box, Button, Typography } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import EggIcon from "@mui/icons-material/Egg";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const Addon = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const addons = useAppSelector((store) => store.addon.items);
   return (
     <Box sx={{ width: "100%" }}>
       <AddonDialog open={open} setOpen={setOpen} />
@@ -17,8 +21,15 @@ const Addon = () => {
             Create
           </Button>
         </Box>
-        <Box>
-          <Typography>Addon</Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {addons.map((item) => (
+            <ItemCard
+              key={item.id}
+              icon={<EggIcon />}
+              title={item.name}
+              href={`/backoffice/addon/${item.id}`}
+            />
+          ))}
         </Box>
       </Box>
     </Box>

@@ -1,4 +1,5 @@
 import Layout from "@/component/Layout";
+import SnackBar from "@/component/snackBar";
 import { store } from "@/store";
 import { theme } from "@/theme";
 import { ThemeProvider } from "@mui/material";
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           <Layout>
             <Component {...pageProps} />
+            <SnackBar />
           </Layout>
         </ThemeProvider>
       </Provider>

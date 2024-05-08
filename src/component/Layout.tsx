@@ -1,38 +1,31 @@
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { ReactNode, useEffect } from "react";
-import SideBar from "./SideBar";
-import TopBar from "./TopBar";
+import { useRouter } from "next/router";
+import { ReactNode } from "react";
+import BackOfficeLayout from "./BackOfficeLayout";
+import OrderLayout from "./OrderAppLayout";
 
-interface Prop {
+interface Props {
   children: ReactNode;
 }
-const Layout = ({ children }: Prop) => {
-  const { data: session } = useSession();
-  const dispatch = useAppDispatch();
-  const { init } = useAppSelector((store) => store.app);
-
-  useEffect(() => {
-    if (session && !init) {
-      dispatch(fetchAppData({}));
-    }
-  }, [session]);
-
-  return (
-    <Box>
-      <TopBar />
-      <Box sx={{ display: "flex", width: "100vs" }}>
-        {session && (
-          <Box>
-            <SideBar />
-          </Box>
-        )}
-        <Box sx={{ ml: 5, width: "100%" }}>{children}</Box>
+const Layout = ({ children }: Props) => {
+  const router = useRouter();
+  const { tableId } = router.query;
+  const isOrderApp = tableId;
+  const isBackOffice = router.pathname.includes("/backoffice");
+  if (isOrderApp) {
+    return (
+      <Box>
+        <OrderLayout>{children}</OrderLayout>
       </Box>
-    </Box>
-  );
+    );
+  } else if (isBackOffice) {
+    return (
+      <Box>
+        <BackOfficeLayout>{children}</BackOfficeLayout>
+      </Box>
+    );
+  } else {
+    return <Box>{children}</Box>;
+  }
 };
-
 export default Layout;

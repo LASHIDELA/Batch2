@@ -1,12 +1,16 @@
 import LocationCardItem from "@/component/CardItem/ItemCard";
 import LocationDialog from "@/component/dialog/LocationDialog";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setChangeLocation } from "@/store/slices/locationSlice";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const Location = () => {
-  const locations = useAppSelector((store) => store.location.items);
+  const { items: locations, setLocation } = useAppSelector(
+    (store) => store.location
+  );
+  const dispatch = useAppDispatch();
   const title = locations.map((item) => item.name);
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -24,6 +28,8 @@ const Location = () => {
               key={item.id}
               icon={<LocationOnIcon />}
               title={item.name}
+              selected={item.id === setLocation.id}
+              onClick={() => dispatch(setChangeLocation(item))}
             />
           ))}
         </Box>

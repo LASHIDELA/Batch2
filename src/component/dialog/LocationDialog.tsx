@@ -16,7 +16,12 @@ interface Prop {
   setOpen: (data: any) => void;
 }
 const LocationDialog = ({ open, setOpen }: Prop) => {
-  const [newLocation, setNewLocation] = useState({ name: "", address: "" });
+  const [newLocation, setNewLocation] = useState({
+    name: "",
+    street: "",
+    townShip: "",
+    city: "",
+  });
   const dispatch = useAppDispatch();
 
   return (
@@ -34,25 +39,56 @@ const LocationDialog = ({ open, setOpen }: Prop) => {
                 name: String(evt.target.value),
               });
             }}
-          ></TextField>
+          />
           <TextField
             sx={{ my: 2 }}
-            placeholder="Address"
+            placeholder="Street"
             onChange={(
               evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ) => {
               setNewLocation({
                 ...newLocation,
-                address: String(evt.target.value),
+                street: String(evt.target.value),
               });
             }}
-          ></TextField>
+          />
+          <TextField
+            sx={{ my: 2 }}
+            placeholder="Township"
+            onChange={(
+              evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => {
+              setNewLocation({
+                ...newLocation,
+                townShip: String(evt.target.value),
+              });
+            }}
+          />
+          <TextField
+            sx={{ my: 2 }}
+            placeholder="City"
+            onChange={(
+              evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => {
+              setNewLocation({
+                ...newLocation,
+                city: String(evt.target.value),
+              });
+            }}
+          />
           <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
             <Button onClick={() => setOpen(false)} variant="contained">
               Cancel
             </Button>
             <Button
-              disabled={newLocation.name && newLocation.address ? false : true}
+              disabled={
+                newLocation.name &&
+                newLocation.street &&
+                newLocation.townShip &&
+                newLocation.city
+                  ? false
+                  : true
+              }
               variant="contained"
               onClick={() => dispatch(createLocation(newLocation))}
             >

@@ -16,7 +16,7 @@ const SideBar = () => {
       sx={{
         bgcolor: "secondary.main",
         width: 250,
-        height: "100vh",
+        height: "100%",
         borderTopRightRadius: 20,
       }}
     >
@@ -48,7 +48,7 @@ export let sideBarApp = [
     id: 1,
     title: "Orders",
     icon: <KitchenIcon />,
-    href: "/backoffice/order",
+    href: "/backoffice/orders",
   },
   {
     id: 2,

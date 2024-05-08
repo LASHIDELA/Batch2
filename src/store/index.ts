@@ -2,10 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import addonCategoryReducer from "./slices/addonCategorySlice";
 import addonReducer from "./slices/addonSlice";
 import appReducer from "./slices/appSlice";
+import cartReducer from "./slices/cartSlice";
+import companyReducer from "./slices/companySlice";
+import disableLocationMenuCategoryReducer from "./slices/disableLocationMenuCategorySlice";
+import disableLocationMenuReducer from "./slices/disableLocationMenuSlice";
 import locationReducer from "./slices/locationSlice";
+import menuAddonCategoryReducer from "./slices/menuAddonCategorySlice";
 import menuCategoryMenu from "./slices/menuCategoryMenu";
 import menuCategoryReducer from "./slices/menuCategorySlice";
 import menuReducer from "./slices/menuSlice";
+import orderReducer from "./slices/orderSlice";
+import snackBarReducer from "./slices/snackBarSlice";
 import tableReducer from "./slices/tableSlice";
 // ...
 
@@ -16,9 +23,16 @@ export const store = configureStore({
     menu: menuReducer,
     menuCategoryMenu: menuCategoryMenu,
     addonCategory: addonCategoryReducer,
+    menuAddonCategory: menuAddonCategoryReducer,
     addon: addonReducer,
-    location: locationReducer,
     table: tableReducer,
+    snackBar: snackBarReducer,
+    location: locationReducer,
+    disableLocationMenu: disableLocationMenuReducer,
+    disableLocationMenuCategory: disableLocationMenuCategoryReducer,
+    cart: cartReducer,
+    order: orderReducer,
+    company: companyReducer,
   },
 });
 

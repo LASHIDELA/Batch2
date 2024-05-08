@@ -1,13 +1,15 @@
-import ItemCard from "@/component/CardItem/ItemCard";
+import ImageCard from "@/component/CardItem/ImageCard";
 import MenuDialog from "@/component/dialog/MenuDialog";
 import { useAppSelector } from "@/store/hooks";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
 
 const Menu = () => {
   const menus = useAppSelector((store) => store.menu.items);
   const [open, setOpen] = useState<boolean>(false);
+  const disableLocationMenus = useAppSelector(
+    (store) => store.disableLocationMenu.items
+  );
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -22,14 +24,19 @@ const Menu = () => {
           </Button>
         </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {menus.map((item) => (
-            <ItemCard
-              key={item.id}
-              icon={<MenuBookIcon />}
-              href={`/backoffice/menu/${item.id}`}
-              title={item.name}
-            />
-          ))}
+          {menus.map((item) => {
+            const isAvailable = disableLocationMenus.find(
+              (disableLocationMenu) => disableLocationMenu.menuId === item.id
+            );
+            return (
+              <ImageCard
+                key={item.id}
+                menu={item}
+                href={`/backoffice/menu/${item.id}`}
+                isAvailable={isAvailable ? false : true}
+              />
+            );
+          })}
         </Box>
         <MenuDialog open={open} setOpen={setOpen} />
       </Box>

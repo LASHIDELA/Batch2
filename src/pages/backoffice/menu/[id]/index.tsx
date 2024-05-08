@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteMenu, upDateMenu } from "@/store/slices/menuSlice";
 import { UpdateMenu } from "@/type/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
@@ -8,17 +9,20 @@ import {
   Dialog,
   DialogContent,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Switch,
   TextField,
 } from "@mui/material";
+import { Menucategory } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-
 const UpdateMenu = () => {
   const router = useRouter();
   const menuId = Number(router.query.id);
@@ -35,16 +39,26 @@ const UpdateMenu = () => {
   const menuCategoryIds = menuCategoryIdFind.map((item) => item.menuCategoryId);
   const menus = useAppSelector((store) => store.menu.items);
   const menu = menus.find((item) => item.id === menuId);
+  const disableLocationMenu = useAppSelector(
+    (store) => store.disableLocationMenu.items
+  );
+
   useEffect(() => {
     if (menu) {
+      const isAvailable = disableLocationMenu.find(
+        (item) => item.menuId === menuId
+      );
+      const locationId = Number(localStorage.getItem("LocationId"));
       setUpDateMenu({
         id: menuId,
         name: menu.name,
         price: menu.price,
         menuCategoryId: menuCategoryIds,
+        locationId: locationId,
+        isAvailable: isAvailable ? false : true,
       });
     }
-  }, [menu]);
+  }, [menu, disableLocationMenu]);
   const handleSelect = (evt: SelectChangeEvent<number[]>) => {
     const menuCategoryIds = evt.target.value as number[];
     setUpDateMenu({ ...upDateMenuData, menuCategoryId: menuCategoryIds });
@@ -54,6 +68,28 @@ const UpdateMenu = () => {
   };
   const handleDelete = () => {
     dispatch(deleteMenu({ id: menuId, onSuccess }));
+  };
+  const handleUpdateMenu = () => {
+    dispatch(
+      upDateMenu({
+        ...upDateMenuData,
+        onSuccess,
+      })
+    );
+  };
+  const updateMenuImage = async (evt: ChangeEvent<HTMLInputElement>) => {
+    const file = evt.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("files", file);
+      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const { assetUrl } = await response.json();
+      setUpDateMenu({ ...upDateMenuData, assetUrl });
+    }
   };
   if (!menu || !upDateMenuData) return null;
   return (
@@ -68,6 +104,21 @@ const UpdateMenu = () => {
       >
         <Button variant="outlined" color="error" onClick={() => setOpen(true)}>
           DELETE
+        </Button>
+      </Box>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <Image
+          width={140}
+          height={160}
+          src={menu.assetUrl || "/default-menu.png"}
+          alt={"Menu"}
+          style={{ borderRadius: 10, marginBottom: 10 }}
+        />
+        <Button variant="outlined" component="label">
+          Update Menu File
+          <input type="file" hidden onChange={updateMenuImage} />
         </Button>
       </Box>
       <Box
@@ -102,7 +153,7 @@ const UpdateMenu = () => {
             }}
           ></TextField>
         }
-        <FormControl sx={{ width: 500 }}>
+        <FormControl sx={{ width: 500, mb: 2 }}>
           <InputLabel id="demo-multiple-checkbox-label">
             MenuCategories
           </InputLabel>
@@ -118,7 +169,7 @@ const UpdateMenu = () => {
                 .map((selectedMenuCategoryId) => {
                   return menuCategories.find(
                     (item) => item.id === selectedMenuCategoryId
-                  );
+                  ) as Menucategory;
                 })
                 .map((item) => item.name)
                 .join(", ");
@@ -141,20 +192,27 @@ const UpdateMenu = () => {
             ))}
           </Select>
         </FormControl>
+        <FormControlLabel
+          control={<Switch defaultChecked={upDateMenuData.isAvailable} />}
+          label="isAvailable"
+          onChange={(evt, value) => {
+            setUpDateMenu({ ...upDateMenuData, isAvailable: value });
+          }}
+        />
         <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-          <Button variant="contained" sx={{ mx: 3 }}>
+          <Button
+            variant="contained"
+            sx={{ mx: 3 }}
+            onClick={() => router.push("/backoffice/menu")}
+          >
             Cancel
           </Button>
           <Button
-            variant="contained"
-            onClick={() =>
-              dispatch(
-                upDateMenu({
-                  ...upDateMenuData,
-                  onSuccess,
-                })
-              )
+            disabled={
+              !upDateMenuData.name || !upDateMenuData.menuCategoryId.length
             }
+            variant="contained"
+            onClick={handleUpdateMenu}
           >
             Update
           </Button>
@@ -166,7 +224,7 @@ const UpdateMenu = () => {
           <DialogContent>Are You Sure To Delete!</DialogContent>
           <Box sx={{ display: "flex", mb: 3, justifyContent: "space-around" }}>
             <Button
-              defaultChecked={true}
+              defaultChecked={upDateMenuData.isAvailable}
               variant="outlined"
               onClick={() => setOpen(false)}
             >

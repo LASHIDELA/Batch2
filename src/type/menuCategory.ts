@@ -1,9 +1,6 @@
 import { Menucategory } from "@prisma/client";
+import { BaseOption } from "./app";
 
-export interface BaseOption {
-  onSuccess?: (data?: any) => void;
-  onError?: (data?: any) => void;
-}
 export interface MenuCategorySlice {
   items: Menucategory[];
   isLoading: boolean;
@@ -12,4 +9,18 @@ export interface MenuCategorySlice {
 export interface GetMenuCategoryOption extends BaseOption {
   name: string;
   locationId: number;
+}
+
+export interface CreateMenuCategoryOption extends BaseOption {
+  name: string;
+  companyId: number;
+}
+export interface UpdateMenuCategoryOption extends BaseOption {
+  id: number;
+  name: string;
+  locationId: number;
+  isAvalible: boolean;
+}
+export interface DeleteMenuCategoryOption extends BaseOption {
+  id: number;
 }

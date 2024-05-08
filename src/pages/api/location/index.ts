@@ -6,7 +6,7 @@ import { authOptions } from "../auth/[...nextauth]";
 
 const location = async (req: NextApiRequest, res: NextApiResponse) => {
   const method = req.method;
-  console.log(req.body);
+
   const session = await getServerSession(req, res, authOptions);
   if (method === "POST") {
     const user = session.user;
@@ -17,12 +17,12 @@ const location = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!session) return res.status(400).send("Unautorized");
 
     const companyId = dbUser.companyId;
-    const { name, address } = req.body;
-    const isValid = name && address;
+    const { name, street, townShip, city } = req.body;
+    const isValid = name && street && townShip && city;
     if (!isValid) return res.status(405).send("Missing Required");
 
     const location = await prisma.location.create({
-      data: { name, address, companyId },
+      data: { name, street, townShip, city, companyId },
     });
     return res.status(200).json({ location });
   }

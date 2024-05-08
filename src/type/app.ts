@@ -7,4 +7,6 @@ export interface AppSlice {
   isLoading: boolean;
   error: Error | null;
 }
-export interface GetAppOption extends BaseOption {}
+export interface GetAppOption extends BaseOption {
+  tableId?: number;
+}

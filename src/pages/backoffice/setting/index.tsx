@@ -1,72 +1,83 @@
-import LocationDialog from "@/component/dialog/LocationDialog";
-import { useAppSelector } from "@/store/hooks";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { updateCompany } from "@/store/slices/companySlice";
+import { setOpenSnackBar } from "@/store/slices/snackBarSlice";
+import { UpdateCompanyOptions } from "@/type/company";
+import { Box, Button, TextField } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
 
-const Setting = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const locations = useAppSelector((store) => store.location.items);
-  const [locationId, setLocationId] = useState<number>();
-  const handleChange = (evt: SelectChangeEvent<any>) => {
-    setLocationId(evt.target.value);
-    localStorage.setItem("LocationId", String(evt.target.value));
-  };
-
+const UpdateCompany = () => {
+  const company = useAppSelector((store) => store.company.item);
+  const [data, setData] = useState<UpdateCompanyOptions>();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    const id = localStorage.getItem("LocationId");
-    if (id) {
-      setLocationId(Number(id));
-    } else {
-      if (locations.length) {
-        const locationsId = locations[0].id;
-        setLocationId(locationsId);
-      }
+    if (company) {
+      setData({
+        id: company.id,
+        name: company.name,
+        street: company.street,
+        townShip: company.townShip,
+        city: company.city,
+      });
     }
-  }, [locations]);
+  }, [company]);
 
-  if (!locationId) return null;
+  if (!company || !data) return null;
   return (
-    <Box sx={{ width: "100%" }}>
-      <LocationDialog open={open} setOpen={setOpen} />
-      <Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+    <Box>
+      <Box sx={{ display: "flex", flexDirection: "column", width: 300 }}>
+        <TextField
+          sx={{ width: 300, mb: 2 }}
+          defaultValue={company.name}
+          onChange={(
+            evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => setData({ ...data, name: evt.target.value })}
+        />
+        <TextField
+          sx={{ width: 300, mb: 2 }}
+          defaultValue={company.street}
+          onChange={(
+            evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => setData({ ...data, street: evt.target.value })}
+        />
+        <TextField
+          sx={{ width: 300, mb: 2 }}
+          defaultValue={company.townShip}
+          onChange={(
+            evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => setData({ ...data, townShip: evt.target.value })}
+        />
+        <TextField
+          sx={{ width: 300, mb: 2 }}
+          defaultValue={company.city}
+          onChange={(
+            evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+          ) => setData({ ...data, city: evt.target.value })}
+        />
+        <Box sx={{ display: "flex", justifyContent: "space-around" }}>
           <Button
-            sx={{ mt: 2, mr: 2 }}
             variant="contained"
-            onClick={() => setOpen(true)}
+            disabled={
+              !data.name && !data.city && !data.street && !data.townShip
+            }
+            onClick={() => {
+              dispatch(
+                updateCompany({
+                  ...data,
+                  onSuccess: () => {
+                    setOpenSnackBar({
+                      message: "Successfully Update table",
+                      severity: "success",
+                    });
+                  },
+                })
+              );
+            }}
           >
-            Create
+            Update
           </Button>
-        </Box>
-        <Box width={250}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Location</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={locationId}
-              label="Locations"
-              onChange={handleChange}
-            >
-              {locations.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </Box>
       </Box>
     </Box>
   );
 };
-
-export default Setting;
+export default UpdateCompany;

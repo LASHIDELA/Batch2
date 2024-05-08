@@ -1,33 +1,38 @@
+import Features from "@/component/Features";
+import Footer from "@/component/Footer";
+import Header from "@/component/Header";
+import Hero from "@/component/Hero";
+import Testimonials from "@/component/Testimonials";
+// import Header from "@/component/Header";
 import { Box } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { Inter } from "next/font/google";
-import { useRouter } from "next/router";
-import { ReactNode } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-interface Props {
-  children: ReactNode;
-}
-const Home = () => {
-  const { data: session } = useSession();
-  console.log(session);
-  const route = useRouter();
-  if (!session) {
-    return (
+const FoodiePOS = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        minHeight: "100vh",
+        overflowY: "auto",
+        flexDirection: "column",
+      }}
+    >
+      <Header />
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "80vh",
-          width: "90vw",
+          maxWidth: { md: "100%", lg: "1280px" },
+          m: "0 auto",
+          px: { xs: "10px", md: "15px" },
         }}
       >
-        Welcome To Our Restaurant
+        <Hero />
+        <Features />
+        <Testimonials />
       </Box>
-    );
-  } else {
-    route.push("backoffice/order");
-  }
+      <Footer />
+    </Box>
+  );
 };
-export default Home;
+
+export default FoodiePOS;

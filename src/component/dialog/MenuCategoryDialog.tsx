@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/store/hooks";
-import { fetchMenuCategory } from "@/store/slices/menuCategorySlice";
+import { createMenuCategory } from "@/store/slices/menuCategorySlice";
 import {
   Box,
   Button,
@@ -25,7 +25,7 @@ const MenuCategoryDialog = ({ open, setOpen }: Prop) => {
   };
   const handleCreate = () => {
     const locationId = Number(localStorage.getItem("LocationId"));
-    dispatch(fetchMenuCategory({ name, locationId, onSuccess }));
+    dispatch(createMenuCategory({ name, locationId, onSuccess }));
   };
   const handleCancel = () => {
     setName(defaultMenuCategory), setOpen(false);

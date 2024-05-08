@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createMenu } from "@/store/slices/menuSlice";
 import { MenuPayLoad } from "@/type/menu";
+import { config } from "@/utils/config";
 import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,6 +21,7 @@ import {
   TextField,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
+import FileDrop from "../fileDrop";
 
 interface Prop {
   open: boolean;
@@ -33,23 +36,42 @@ const MenuDialog = ({ open, setOpen }: Prop) => {
     const selectedMenuCategoryId = evt.target.value as number[];
     setNewMenu({ ...newMenu, menuCategoryId: selectedMenuCategoryId });
   };
+  const [imageFile, setImage] = useState<File>();
 
-  const handleCreateMenu = () => {
+  const handleCreateMenu = async () => {
+    const newMenuPayload = { ...newMenu };
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("files", imageFile);
+      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const { assetUrl } = await response.json();
+
+      newMenuPayload.assetUrl = assetUrl;
+    }
     dispatch(
       createMenu({
-        ...newMenu,
+        ...newMenuPayload,
         onSuccess: () => {
           setOpen(false);
         },
       })
     );
   };
+  const fileUploaded = (file: File[]) => {
+    setImage(file[0]);
+  };
   if (!newMenu) return null;
   return (
     <Box>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Menus</DialogTitle>
-        <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
+        <DialogContent
+          sx={{ display: "flex", flexDirection: "column", width: 400 }}
+        >
           <TextField
             placeholder="Name"
             onChange={(
@@ -67,7 +89,8 @@ const MenuDialog = ({ open, setOpen }: Prop) => {
               setNewMenu({ ...newMenu, price: Number(evt.target.value) });
             }}
           ></TextField>
-          <FormControl sx={{ width: 300 }}>
+
+          <FormControl sx={{ width: 400 }}>
             <InputLabel id="demo-multiple-checkbox-label">
               MenuCategories
             </InputLabel>
@@ -105,6 +128,16 @@ const MenuDialog = ({ open, setOpen }: Prop) => {
               ))}
             </Select>
           </FormControl>
+          <Box>
+            <FileDrop fileUploaded={fileUploaded} />
+            {imageFile && (
+              <Chip
+                sx={{ mr: 1, mt: 1 }}
+                label={imageFile.name}
+                onDelete={() => setImage(undefined)}
+              />
+            )}
+          </Box>
           <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
             <Button
               variant="contained"

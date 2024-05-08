@@ -16,7 +16,9 @@ datasource db {
 model Company {
   id Int @id @default(autoincrement())
   name String
-  address String
+  street String
+  townShip String
+  city String
   location Location[]
   menucategory Menucategory[]
   user User[]
@@ -28,7 +30,9 @@ model Company {
 model Location {
   id Int @id @default(autoincrement())
   name String
-  address String
+  street String
+  townShip String
+  city String
   company Company @relation(fields: [companyId], references: [id])
   companyId Int
   table Table []
@@ -69,7 +73,7 @@ model Menu {
   menuCategoryMenu MenuCategoryMenu[]
   disableLocationMenu DisableLocationMenu []
   menuAddonCategory MenuAddonCategory[]
-  orderLine OrderLine []
+   order Order[]
   isArchived Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +84,7 @@ model DisableLocationMenu {
   menuId Int
   location Location @relation(fields: [locationId],references: [id])
   locationId Int
+ 
   isArchived Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -123,7 +128,7 @@ model Addon {
   price Int @default(0)
   addonCateogry AddonCategory @relation(fields: [addonCategoryId], references: [id])
   addonCategoryId Int
-  orderLine OrderLine[]
+  order Order[]
   isArchived Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -131,34 +136,31 @@ model Addon {
 
 model Order {
   id Int @id @default(autoincrement())
+  menu Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+  quantity Int
+  addon Addon? @relation(fields: [addonId], references: [id])
+  addonId Int?
+  orderSeq String
+  itemId String
   totalPrice Int
+  table Table @relation(fields: [tableId],references: [id])
+  tableId Int
   status OrderStatus
-  orderLine OrderLine[]
   isArchived Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model OrderLine {
-  id Int @id @default(autoincrement())
-  menu Menu @relation(fields: [menuId], references: [id])
-  menuId Int
-  quantity Int
-  addon Addon @relation(fields: [addonId], references: [id])
-  addonId Int
-  orderSeq String
-  order Order @relation(fields: [orderId], references: [id])
-  orderId Int
-  isArchived Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+
 
 model Table {
   id Int @id @default(autoincrement())
   name String
   location Location @relation(fields: [locationId], references: [id])
   locationId Int
+  order Order[]
+  qrcodeUrl String
   isArchived Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -176,8 +178,8 @@ model User {
 }
 
 enum OrderStatus {
-  ORDERED
-  OUTFORDELIVERY
-  CANCELORDER
+  PENDING
+  COOKING
+  COMPALATED
 }
 

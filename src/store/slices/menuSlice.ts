@@ -2,6 +2,11 @@ import { DeleteMenu, MenuPayLoad, MenuSlice, UpdateMenu } from "@/type/menu";
 import { config } from "@/utils/config";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  addDisableLocationMenu,
+  removeDisableLocationMenu,
+} from "./disableLocationMenuSlice";
+import { removeMenuAddonCategory } from "./menuAddonCategorySlice";
+import {
   addMenuCategoryMenu,
   replaceMenuCategoryMenu,
 } from "./menuCategoryMenu";
@@ -15,15 +20,16 @@ const initialState: MenuSlice = {
 export const createMenu = createAsyncThunk(
   "menu/createMenu",
   async (options: MenuPayLoad, thunkApi) => {
-    const { name, price, menuCategoryId, onSuccess, onError } = options;
+    const { name, assetUrl, price, menuCategoryId, onSuccess, onError } =
+      options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, price, menuCategoryId }),
+        body: JSON.stringify({ name, assetUrl, price, menuCategoryId }),
       });
-      const { newMenus, newMenuCategoryMenu } = await response.json();
-      thunkApi.dispatch(addMenu(newMenus));
+      const { newMenu, newMenuCategoryMenu } = await response.json();
+      thunkApi.dispatch(addMenu(newMenu));
       thunkApi.dispatch(addMenuCategoryMenu(newMenuCategoryMenu));
       onSuccess && onSuccess();
     } catch (error) {
@@ -35,16 +41,43 @@ export const createMenu = createAsyncThunk(
 export const upDateMenu = createAsyncThunk(
   "menu/upDateMenu",
   async (options: UpdateMenu, thunkApi) => {
-    const { id, name, price, menuCategoryId, onSuccess, onError } = options;
+    const {
+      id,
+      name,
+      price,
+      menuCategoryId,
+      locationId,
+      isAvailable,
+      assetUrl,
+      onSuccess,
+      onError,
+    } = options;
     try {
       const response = await fetch(`${config.apiBaseUrl}/menu`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id, name, price, menuCategoryId }),
+        body: JSON.stringify({
+          id,
+          name,
+          price,
+          menuCategoryId,
+          locationId,
+          isAvailable,
+          assetUrl,
+        }),
       });
-      const { updateMenus, updateMenuCategoryMenu } = await response.json();
+      const { updateMenus, updateMenuCategoryMenu, disableLocationMenus } =
+        await response.json();
       thunkApi.dispatch(replaceMenu(updateMenus));
       thunkApi.dispatch(replaceMenuCategoryMenu(updateMenuCategoryMenu));
+      if (isAvailable === false) {
+        thunkApi.dispatch(addDisableLocationMenu(disableLocationMenus));
+      }
+      if (isAvailable === true) {
+        thunkApi.dispatch(
+          removeDisableLocationMenu({ locationId, menuId: id })
+        );
+      }
       onSuccess && onSuccess();
     } catch (error) {
       onError && onError();
@@ -61,6 +94,7 @@ export const deleteMenu = createAsyncThunk(
         method: "DELETE",
       });
       thunkApi.dispatch(removeMenu({ id }));
+      thunkApi.dispatch(removeMenuAddonCategory({ menuId: id }));
       onSuccess && onSuccess();
     } catch (error) {
       onError && onError();

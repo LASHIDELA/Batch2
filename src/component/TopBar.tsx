@@ -1,9 +1,10 @@
-import { Box, Button } from "@mui/material";
+import { useAppSelector } from "@/store/hooks";
+import { Box, Button, Typography } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 const TopBar = () => {
   const { data: session } = useSession();
-
+  const { setLocation } = useAppSelector((store) => store.location);
   return (
     <Box
       sx={{
@@ -17,11 +18,18 @@ const TopBar = () => {
       }}
     >
       <Box sx={{ color: "#f6ff00", fontSize: "40px" }}>FD POS</Box>
-      <Box sx={{ color: "white", fontSize: "40px" }}>KC Foodie POS</Box>
+      <Box sx={{ color: "white", fontSize: "40px" }}>
+        <Typography>KC Foodie POS</Typography>
+        <Typography
+          sx={{ fontSize: "12px", display: "flex", justifyContent: "center" }}
+        >
+          {setLocation?.name}
+        </Typography>
+      </Box>
       <Box>
         {session ? (
           <Button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() => signOut({ callbackUrl: "/backoffice" })}
             variant="contained"
             sx={{ bgcolor: "secondary.main" }}
           >
@@ -29,13 +37,12 @@ const TopBar = () => {
           </Button>
         ) : (
           <Button
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+            onClick={() => signIn("google", { callbackUrl: "/backoffice" })}
             variant="contained"
             sx={{ bgcolor: "secondary.main" }}
           >
             Sign In
           </Button>
-          // <span />
         )}
       </Box>
     </Box>

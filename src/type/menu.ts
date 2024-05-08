@@ -15,6 +15,7 @@ export interface MenuPayLoad extends BaseOption {
   name: string;
   price: number;
   menuCategoryId: number[];
+  assetUrl?: string;
 }
 
 export interface UpdateMenu extends BaseOption {
@@ -22,6 +23,9 @@ export interface UpdateMenu extends BaseOption {
   name?: string;
   price?: number;
   menuCategoryId: number[];
+  isAvailable: boolean;
+  locationId: number;
+  assetUrl?: string;
 }
 export interface DeleteMenu extends BaseOption {
   id: number;

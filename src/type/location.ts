@@ -6,6 +6,7 @@ export interface BaseOption {
 }
 export interface LocationSlice {
   items: Location[];
+  setLocation: Location | null;
   isLoading: boolean;
   error: Error | null;
 }
@@ -15,5 +16,7 @@ export interface GetLocationOption extends BaseOption {
 }
 export interface PayloadOption extends BaseOption {
   name: string;
-  address: string;
+  street: string;
+  townShip: string;
+  city: string;
 }

@@ -1,9 +1,11 @@
 import { LocationSlice, PayloadOption } from "@/type/location";
 import { config } from "@/utils/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Location } from "@prisma/client";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState: LocationSlice = {
   items: [],
+  setLocation: null,
   isLoading: false,
   error: null,
 };
@@ -11,8 +13,7 @@ const initialState: LocationSlice = {
 export const createLocation = createAsyncThunk(
   "location/createLocation",
   async (option: PayloadOption, thunApi) => {
-    const { name, address, onError, onSuccess } = option;
-    console.log(option);
+    const { name, street, townShip, city, onError, onSuccess } = option;
     try {
       const response = await fetch(`${config.apiBaseUrl}/location`, {
         method: "POST",
@@ -31,8 +32,25 @@ const locationSlices = createSlice({
   name: "location",
   initialState,
   reducers: {
-    setLocation: (state, action) => {
+    setLocation: (state, action: PayloadAction<Location[]>) => {
       state.items = action.payload;
+      const selectedLocaiotnId = localStorage.getItem("LocationId");
+
+      if (!selectedLocaiotnId) {
+        const defaultLocation = String(action.payload[0].id);
+        localStorage.setItem("LocationId", defaultLocation);
+        state.setLocation = action.payload[0];
+      } else {
+        const selectedLocation = state.items.find(
+          (item) => item.id === Number(selectedLocaiotnId)
+        );
+        if (selectedLocation) {
+          state.setLocation = selectedLocation;
+        }
+      }
+    },
+    setChangeLocation: (state, action: PayloadAction<Location>) => {
+      state.setLocation = action.payload;
     },
     addLocation: (state, action) => {
       state.items = [...state.items, action.payload];
@@ -40,5 +58,6 @@ const locationSlices = createSlice({
   },
 });
 
-export const { setLocation, addLocation } = locationSlices.actions;
+export const { setLocation, addLocation, setChangeLocation } =
+  locationSlices.actions;
 export default locationSlices.reducer;
