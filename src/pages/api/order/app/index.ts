@@ -12,6 +12,7 @@ const app = async (req: NextApiRequest, res: NextApiResponse) => {
       const tableDatas = await prisma.table.findFirst({
         where: { id: Number(tableId) },
       });
+
       const location = await prisma.location.findFirst({
         where: { id: tableDatas.locationId },
       });
