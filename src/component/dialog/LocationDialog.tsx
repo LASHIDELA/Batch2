@@ -16,7 +16,7 @@ interface Prop {
   setOpen: (data: any) => void;
 }
 const LocationDialog = ({ open, setOpen }: Prop) => {
-  const companyId = useAppSelector((store) => store.company.item.id);
+  const companyId = useAppSelector((store) => store.company.item?.id);
   const [newLocation, setNewLocation] = useState({
     name: "",
     street: "",

@@ -10,6 +10,7 @@ const Location = () => {
   const { items: locations, setLocation } = useAppSelector(
     (store) => store.location
   );
+  console.log("locaiton is", setLocation);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -40,7 +41,7 @@ const Location = () => {
               key={item.id}
               icon={<LocationOnIcon />}
               title={item.name}
-              selected={item.id === setLocation.id}
+              selected={item.id === setLocation?.id}
               onClick={() =>
                 dispatch(
                   setChangeLocation(item),
