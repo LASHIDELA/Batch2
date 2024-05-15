@@ -10,10 +10,10 @@ const ActiveOrder = () => {
   const router = useRouter();
   const { id: orderSeq, tableId } = router.query;
   const orders = useAppSelector((store) => store.order.items);
-  const totalPrices = orders
-    .filter((item) => item.orderSeq === orderSeq)
-    .map((calculateTotal) => calculateTotal.totalPrice)
-    .reduce((beforePrice, afterPrice) => (beforePrice += afterPrice), 0);
+  // const totalPrices = orders
+  //   .filter((item) => item.orderSeq === orderSeq)
+  //   .map((calculateTotal) => calculateTotal.totalPrice)
+  //   .reduce((beforePrice, afterPrice) => (beforePrice += afterPrice), 0);
 
   const addons = useAppSelector((store) => store.addon.items);
   const table = useAppSelector((store) => store.table.items);
@@ -36,6 +36,7 @@ const ActiveOrder = () => {
   const handleRefreshPage = () => {
     dispatch(refreshOrders({ orderSeq: String(orderSeq) }));
   };
+  if (!orders.length) return;
   return (
     <Box
       sx={{
@@ -58,7 +59,7 @@ const ActiveOrder = () => {
       >
         <Box>Order Sequence: {orderSeq}</Box>
         <Typography variant="h5" sx={{ fontWeight: "bold", mt: 1 }}>
-          Total Price:{totalPrices}
+          Total Price:{orders && orders[0].totalPrice}
         </Typography>
       </Box>
       <Box
@@ -66,7 +67,7 @@ const ActiveOrder = () => {
           display: "flex",
           mt: 2,
           flexWrap: "wrap",
-          justifyContent: "space-between",
+          justifyContent: { xs: "center", sm: "space-between" },
         }}
       >
         {orderItem.map((item) => (

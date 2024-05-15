@@ -54,7 +54,7 @@ const OrderAppHeader = ({ counter }: Props) => {
         <Box
           sx={{
             position: "absolute",
-            right: { xs: 40, md: 80, lg: 150 },
+            right: { xs: 10, md: 80, lg: 150 },
             top: 10,
             cursor: "pointer",
             display: "flex",
@@ -89,9 +89,12 @@ const OrderAppHeader = ({ counter }: Props) => {
             position: "absolute",
             top: 100,
             textAlign: "center",
+            display: { xs: "none", sm: "block" },
           }}
         >
-          <Typography variant="h3">{company.name}</Typography>
+          <Typography sx={{ fontSize: { sm: 26 }, fontWeight: { sm: "bold" } }}>
+            {company.name}
+          </Typography>
           <Typography>{company.street}</Typography>
           <Typography>
             {company.townShip},{company.city}

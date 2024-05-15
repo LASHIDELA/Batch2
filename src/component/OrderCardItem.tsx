@@ -13,7 +13,7 @@ const OrderCardItem = ({ orderItems, isAdmin, handleUpdatStatus }: Props) => {
 
   return (
     <Box>
-      <Card sx={{ width: 250, height: 300, mt: 2 }}>
+      <Card sx={{ width: 250, height: 300, mt: 2, mx: 1 }}>
         <Box
           sx={{
             display: "flex",

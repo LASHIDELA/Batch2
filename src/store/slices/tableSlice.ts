@@ -19,7 +19,7 @@ export const createTable = createAsyncThunk(
   async (payloadOption: CreateTableOptions, thunkApi) => {
     const { name, locationId, onSuccess, onError } = payloadOption;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/table`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/table`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, locationId }),
@@ -37,7 +37,7 @@ export const updateTable = createAsyncThunk(
   async (payloadOption: UpdateTableOptions, thunkApi) => {
     const { name, id, onSuccess, onError } = payloadOption;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/table`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/table`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, id }),
@@ -55,9 +55,12 @@ export const deleteTable = createAsyncThunk(
   async (payloadOption: DeleteTableOptions, thunkApi) => {
     const { id, onSuccess, onError } = payloadOption;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/table?id=${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${config.apiBackOfficeUrl}/table?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       thunkApi.dispatch(removeTable({ id }));
       onSuccess && onSuccess();
     } catch (error) {

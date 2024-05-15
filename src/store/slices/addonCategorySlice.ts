@@ -22,7 +22,7 @@ export const createAddonCategory = createAsyncThunk(
   async (options: CreateAddonCategory, thunkApi) => {
     const { name, menuIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addonCategory`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/addonCategory`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, menuIds }),
@@ -43,7 +43,7 @@ export const updateAddonCategories = createAsyncThunk(
   async (options: UpdateAddonCategory, thunkApi) => {
     const { name, id, isRequired, menuIds, onSuccess, onError } = options;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/addonCategory`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/addonCategory`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name, id, isRequired, menuIds }),
@@ -66,7 +66,7 @@ export const removeAddonCategories = createAsyncThunk(
     const { id, onSuccess, onError } = options;
     try {
       const response = await fetch(
-        `${config.apiBaseUrl}/addonCategory?id=${id}`,
+        `${config.apiBackOfficeUrl}/addonCategory?id=${id}`,
         {
           method: "DELETE",
         }

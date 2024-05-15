@@ -20,19 +20,19 @@ export const formatOrder = (
   addons: Addon[],
   menus: Menu[],
   table: Table[]
-) => {
+): OrderItem[] => {
   const orderItemIds: string[] = [];
   orders.forEach((order) => {
     const itemId = order.itemId;
-    const exit = orderItemIds.find((item) => item === order.itemId);
+    const exit = orderItemIds.find((item) => item === itemId);
     if (!exit) {
       orderItemIds.push(itemId);
     }
   });
 
-  let orderItems: OrderItem[] = orderItemIds.map((itemId) => {
-    const currentId = orders.filter((item) => item.itemId === itemId);
-    const addonIds = currentId.map((item) => item.addonId);
+  let orderItems: OrderItem[] = orderItemIds.map((orderItemId) => {
+    const currentOrders = orders.filter((item) => item.itemId === orderItemId);
+    const addonIds = currentOrders.map((item) => item.addonId);
     let orderAddons: OrderAddons[] = [];
     addonIds.forEach((addonId) => {
       const addon = addons.find((item) => item.id === addonId) as Addon;
@@ -65,13 +65,13 @@ export const formatOrder = (
       }
     });
     return {
-      itemId,
-      orderStatus: currentId[0].status,
-      orderAddons: orderAddons.sort(
-        (a, b) => b.addonCategoryId - a.addonCategoryId
-      ),
-      menus: menus.find((item) => item.id === currentId[0].menuId),
-      table: table.find((item) => item.id === currentId[0].tableId),
+      itemId: orderItemId,
+      orderStatus: currentOrders[0].status,
+      orderAddons: addonIds.length
+        ? orderAddons.sort((a, b) => b.addonCategoryId - a.addonCategoryId)
+        : [],
+      menus: menus.find((item) => item.id === currentOrders[0].menuId),
+      table: table.find((item) => item.id === currentOrders[0].tableId),
     };
   });
   return orderItems.sort((a, b) => a.itemId.localeCompare(b.itemId));

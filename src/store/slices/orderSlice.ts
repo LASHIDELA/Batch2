@@ -18,7 +18,7 @@ export const createOrder = createAsyncThunk(
   async (payloadOption: CreateOrderOption, thunkApi) => {
     const { tableId, cartItem, onSuccess, onError } = payloadOption;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/active-order`, {
+      const response = await fetch(`${config.apiOrderUrl}/active-order`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ tableId, cartItem }),
@@ -36,7 +36,7 @@ export const updateOrderStatus = createAsyncThunk(
   async (payloadAction: UpdateOrderStatus, thunkapi) => {
     const { itemId, orderStatus, onError, onSuccess } = payloadAction;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/active-order`, {
+      const response = await fetch(`${config.apiOrderUrl}/active-order`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ itemId, orderStatus }),
@@ -54,7 +54,7 @@ export const refreshOrders = createAsyncThunk(
 
     try {
       const response = await fetch(
-        `${config.apiBaseUrl}/active-order?orderSeq=${orderSeq}`
+        `${config.apiOrderUrl}/active-order?orderSeq=${orderSeq}`
       );
       const { orders } = await response.json();
 

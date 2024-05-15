@@ -13,9 +13,10 @@ const initialState: LocationSlice = {
 export const createLocation = createAsyncThunk(
   "location/createLocation",
   async (option: PayloadOption, thunApi) => {
-    const { name, street, townShip, city, onError, onSuccess } = option;
+    const { name, street, townShip, companyId, city, onError, onSuccess } =
+      option;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/location`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/location`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(option),

@@ -18,17 +18,15 @@ const AddonCategoriesDetail = ({
 }: Props) => {
   const addons = useAppSelector((item) => item.addon.items);
   return (
-    <Box>
+    <Box sx={{ mx: { xs: 2 } }}>
       {addonCategories.map((addonCategory) => {
         return (
           <Box key={addonCategory.id}>
             <Box
               sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}
             >
-              <Typography variant="h5" sx={{ mr: 6 }}>
-                {addonCategory.name}
-              </Typography>
-              <Typography variant="h5" sx={{ ml: 6 }}>
+              <Typography sx={{ mr: 6 }}>{addonCategory.name}</Typography>
+              <Typography sx={{ ml: 6 }}>
                 {addonCategory.isRequired === true ? (
                   <Chip label="Required" />
                 ) : (

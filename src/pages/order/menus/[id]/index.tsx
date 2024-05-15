@@ -100,7 +100,13 @@ const MenuDetail = () => {
         }}
       >
         {menus.map((item) => (
-          <Box key={item.id} sx={{ display: "flex", flexDirection: "column" }}>
+          <Box
+            key={item.id}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <Image
               width={140}
               height={140}

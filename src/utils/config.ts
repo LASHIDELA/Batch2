@@ -1,5 +1,6 @@
 interface Config {
-  apiBaseUrl: string;
+  apiBackOfficeUrl: string;
+  apiOrderUrl: string;
   cliendId: string;
   secretId: string;
   spaceEndpoint: string;
@@ -9,7 +10,8 @@ interface Config {
 }
 
 export const config: Config = {
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "",
+  apiBackOfficeUrl: process.env.NEXT_PUBLIC_BACKOFFICE_API_BASE_URL || "",
+  apiOrderUrl: process.env.NEXT_PUBLIC_ORDER_API_BASE_URL || "",
   cliendId: process.env.CLICEN_ID || "",
   secretId: process.env.SECRET_ID || "",
   spaceEndpoint: process.env.SPACE_ENDPOINT || "",

@@ -39,7 +39,7 @@ const CartDetail = () => {
       sx={{
         position: "relative",
         zIndex: 5,
-        top: 150,
+        top: { xs: 80, md: 150, lg: 200 },
         width: "500px",
         display: "flex",
         alignItems: "center",
@@ -55,7 +55,10 @@ const CartDetail = () => {
 
             return (
               <Box
-                sx={{ display: "flex", flexDirection: "column" }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
                 key={cartItem.id}
               >
                 <Box
@@ -74,6 +77,7 @@ const CartDetail = () => {
                         mr: 2,
                         display: "flex",
                         alignItems: "center",
+                        ml: { xs: 5 },
                       }}
                     >
                       {quantity}
@@ -83,7 +87,7 @@ const CartDetail = () => {
 
                   <Typography>{menu.price}</Typography>
                 </Box>
-                <Box sx={{ pl: 4 }}>{renderAddon(addon)}</Box>
+                <Box sx={{ pl: 4, ml: { xs: 5 } }}>{renderAddon(addon)}</Box>
                 <Box
                   sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}
                 >
@@ -120,7 +124,7 @@ const CartDetail = () => {
           </Box>
           <Typography
             variant="h5"
-            sx={{ display: "flex", justifyContent: "flex-end" }}
+            sx={{ display: "flex", justifyContent: "flex-end", mx: { xs: 5 } }}
           >
             Total Price : {getTotalPrice(cartItems)}
           </Typography>

@@ -19,4 +19,5 @@ export interface PayloadOption extends BaseOption {
   street: string;
   townShip: string;
   city: string;
+  companyId: number;
 }
