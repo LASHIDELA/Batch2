@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { createLocation } from "@/store/slices/locationSlice";
 import {
   Box,
@@ -16,6 +16,7 @@ interface Prop {
   setOpen: (data: any) => void;
 }
 const LocationDialog = ({ open, setOpen }: Prop) => {
+  const companyId = useAppSelector((store) => store.company.item?.id);
   const [newLocation, setNewLocation] = useState({
     name: "",
     street: "",
@@ -90,7 +91,17 @@ const LocationDialog = ({ open, setOpen }: Prop) => {
                   : true
               }
               variant="contained"
-              onClick={() => dispatch(createLocation(newLocation))}
+              onClick={() => {
+                dispatch(
+                  createLocation({
+                    ...newLocation,
+                    companyId,
+                    onSuccess: () => {
+                      setOpen(false);
+                    },
+                  })
+                );
+              }}
             >
               Create
             </Button>

@@ -25,7 +25,9 @@ const activeOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     const orderSeq = order ? order.orderSeq : nanoid();
-    const totalPrice = getTotalPrice(cartItem);
+    const totalPrice = order
+      ? order.totalPrice + getTotalPrice(cartItem)
+      : getTotalPrice(cartItem);
 
     for (const item of cartItem) {
       const items = item as CartItem;
@@ -60,8 +62,11 @@ const activeOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
     }
+    await prisma.order.updateMany({
+      data: { totalPrice },
+      where: { orderSeq },
+    });
     const orders = await prisma.order.findMany({ where: { orderSeq } });
-
     return res.status(200).json({ orders });
   } else if ("PUT") {
     const { itemId, orderStatus } = req.body;
@@ -69,13 +74,20 @@ const activeOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!isValid) return res.status(405).send("Invalid Data");
     const exit = await prisma.order.findFirst({ where: { itemId } });
     if (!exit) return res.status(400).send("Bad Request");
-    const orderSeq = exit.orderSeq;
-    const ordes = await prisma.order.updateMany({
+    await prisma.order.updateMany({
       data: { status: orderStatus, isArchived: false },
       where: { itemId },
     });
+
+    const table = await prisma.table.findFirst({
+      where: { id: exit.tableId },
+    });
+    const tableIds = (
+      await prisma.table.findMany({ where: { locationId: table?.locationId } })
+    ).map((item) => item.id);
     const orders = await prisma.order.findMany({
-      where: { tableId: exit.tableId, isArchived: false },
+      where: { tableId: { in: tableIds }, isArchived: false },
+      orderBy: { id: "asc" },
     });
     return res.status(200).json({ orders });
   }

@@ -43,7 +43,7 @@ const MenuDialog = ({ open, setOpen }: Prop) => {
     if (imageFile) {
       const formData = new FormData();
       formData.append("files", imageFile);
-      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+      const response = await fetch(`${config.apiBackOfficeUrl}/assets`, {
         method: "POST",
         body: formData,
       });

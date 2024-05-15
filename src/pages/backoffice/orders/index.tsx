@@ -32,6 +32,7 @@ const Orders = () => {
       const filterOrderItem = formatOrder(orders, addons, menus, table).filter(
         (item) => item.orderStatus === statusValue
       );
+
       setFilterOrder(filterOrderItem);
     }
   }, [orders, statusValue]);
@@ -43,10 +44,15 @@ const Orders = () => {
     <Box>
       <Box sx={{ width: "100%" }}>
         <OrderDialog open={open} setOpen={setOpen}></OrderDialog>
-        <Box>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ mr: { xs: 1, sm: 3 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "center", sm: "flex-end" },
+            }}
+          >
             <Button
-              sx={{ my: 2, mr: 2 }}
+              sx={{ my: 2 }}
               variant="contained"
               onClick={() => setOpen(true)}
             >
@@ -58,9 +64,10 @@ const Orders = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              flexDirection: { xs: "column", sm: "row" },
             }}
           >
-            <Box>
+            <Box sx={{ ml: { sm: 2 }, mb: { xs: 2 } }}>
               <Typography>Order</Typography>
             </Box>
             <Box>
@@ -87,7 +94,7 @@ const Orders = () => {
               display: "flex",
               mt: 4,
               flexWrap: "wrap",
-              mr: 2,
+              justifyContent: { xs: "center", md: "flex-start" },
             }}
           >
             {filterOrder.map((item) => (

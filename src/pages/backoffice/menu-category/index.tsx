@@ -14,16 +14,31 @@ const MenuCategory = () => {
   return (
     <Box sx={{ width: "100%" }}>
       <Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box
+          sx={{
+            display: "flex",
+
+            justifyContent: { xs: "center", sm: "flex-end" },
+          }}
+        >
           <Button
-            sx={{ mt: 2, mr: 2 }}
+            sx={{
+              mt: 2,
+              mr: 2,
+            }}
             variant="contained"
             onClick={() => setOpen(true)}
           >
             Create
           </Button>
         </Box>
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: { xs: "center", sm: "flex-start" },
+          }}
+        >
           {menuCategories.map((item) => {
             const selectedLocationId = Number(
               localStorage.getItem("LocationId")

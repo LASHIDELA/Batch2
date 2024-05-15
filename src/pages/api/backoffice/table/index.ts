@@ -2,16 +2,10 @@
 import { prisma } from "@/utils/db";
 import { getImageUrl, imageUrl } from "@/utils/fileUpload";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
 
 const table = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getServerSession(req, res, authOptions);
-  if (!session) return res.status(404).send("Unauthorized");
   const method = req.method;
-  const user = session.user;
-  const email = user?.email as string;
-  const db = await prisma.user.findUnique({ where: { email } });
+
   if (method === "POST") {
     const { name, locationId } = req.body;
     const isValid = name && locationId;

@@ -23,7 +23,7 @@ const OrderLayout = ({ children }: Props) => {
     orders.some(
       (item) => item.status === "COOKING" || item.status === "PENDING"
     );
-  console.log(isFooterBar);
+
   const itemCount = useAppSelector((store) => store.cart.items);
   useEffect(() => {
     if (tableId) {
@@ -34,11 +34,10 @@ const OrderLayout = ({ children }: Props) => {
   return (
     <Box sx={{ position: "relative" }}>
       <OrderAppHeader counter={itemCount.length} />
-
       <Box
         sx={{
           position: "relative",
-          top: isHome ? 240 : 0,
+          top: { xs: isHome ? 50 : 0, sm: isHome ? 240 : 0 },
           width: { xs: "100%", md: "80%", lg: "55%" },
           m: "0 auto",
         }}
@@ -48,6 +47,8 @@ const OrderLayout = ({ children }: Props) => {
             sx={{
               width: { xs: "100%", md: "80%", lg: "100%" },
               m: "0 auto",
+              display: { xs: "flex", justifyContent: "center" },
+              px: { xs: 10 },
             }}
           >
             {children}
@@ -60,7 +61,7 @@ const OrderLayout = ({ children }: Props) => {
             height: 50,
             bgcolor: "primary.main",
             position: "fixed",
-            width: "100vw",
+            width: "100%",
             zIndex: 5,
             display: "flex",
             justifyContent: "center",

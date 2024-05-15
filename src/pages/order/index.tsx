@@ -37,7 +37,12 @@ const Order = () => {
     return validMenus.map((item) => {
       const href = { pathname: `/order/menus/${item.id}`, query };
       return (
-        <Box key={item.id} sx={{ mt: 2 }}>
+        <Box
+          key={item.id}
+          sx={{
+            mt: 2,
+          }}
+        >
           {<ImageCard menu={item} href={href} />}
         </Box>
       );
@@ -75,7 +80,17 @@ const Order = () => {
           })}
         </Tabs>
       </Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>{renderMenu()}</Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: {
+            xs: "center",
+          },
+        }}
+      >
+        {renderMenu()}
+      </Box>
     </Box>
   );
 };

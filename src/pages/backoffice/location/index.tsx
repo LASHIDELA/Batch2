@@ -10,26 +10,44 @@ const Location = () => {
   const { items: locations, setLocation } = useAppSelector(
     (store) => store.location
   );
+  console.log("locaiton is", setLocation);
   const dispatch = useAppDispatch();
-  const title = locations.map((item) => item.name);
   const [open, setOpen] = useState<boolean>(false);
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2, mr: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: { xs: "center", sm: "flex-end" },
+          mt: 2,
+          mr: 2,
+        }}
+      >
         <Button variant="contained" onClick={() => setOpen(true)}>
           Create
         </Button>
         <LocationDialog open={open} setOpen={setOpen} />
       </Box>
       <Box>
-        <Box sx={{ display: "flex", textDecoration: "wrap" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", sm: "flex-start" },
+            flexWrap: "wrap",
+          }}
+        >
           {locations.map((item) => (
             <LocationCardItem
               key={item.id}
               icon={<LocationOnIcon />}
               title={item.name}
-              selected={item.id === setLocation.id}
-              onClick={() => dispatch(setChangeLocation(item))}
+              selected={item.id === setLocation?.id}
+              onClick={() =>
+                dispatch(
+                  setChangeLocation(item),
+                  localStorage.setItem("LocationId", String(item.id))
+                )
+              }
             />
           ))}
         </Box>
